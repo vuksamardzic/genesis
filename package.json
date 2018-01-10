@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.html",
   "scripts": {},
-  "author": "Vuk Samardžić",
+  "author": "Vuk Samardžić <samardzic.vuk@gmail.com>",
   "license": "MIT",
   "devDependencies": {
     "autoprefixer": "^7.2.3",
