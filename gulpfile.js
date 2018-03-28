@@ -20,11 +20,25 @@ const babel             = require('gulp-babel');
 const clean             = require('gulp-clean');
 const imagemin          = require('gulp-imagemin');
 
-const scripts =
-    [
-        './node_modules/jquery/dist/jquery.min.js',
-        './node_modules/slick-carousel/slick/slick.min.js'
-    ];
+const scripts = [
+    './node_modules/jquery/dist/jquery.min.js',
+    './node_modules/slick-carousel/slick/slick.min.js'
+];
+
+const path = {
+    dev: {
+        html: 'src/*.html',
+        scss: 'src/scss/**/*.scss',
+        js: 'src/js/**/*.js',
+        img: 'src/img/*'
+    },
+    dist: {
+        html: 'dist',
+        css: 'dist/css',
+        js: 'dist/js',
+        img: 'dist/img'
+    }
+}
 
 /**
  * Development setup
@@ -38,37 +52,37 @@ gulp.task('serve', ['vendor', 'compile:es6', 'compile:scss'], function () {
         }
     });
 
-    gulp.watch('src/scss/**/*.scss', ['compile:scss']);
-    gulp.watch('src/*.html', browserSync.reload);
-    gulp.watch('src/js/**/*.js', ['compile:es6', browserSync.reload]);
+    gulp.watch(path.dev.scss, ['compile:scss']);
+    gulp.watch(path.dev.html, browserSync.reload);
+    gulp.watch(path.dev.js, ['compile:es6', browserSync.reload]);
 });
 
 gulp.task('compile:scss', function () {
     return gulp
-        .src('src/scss/**/*.scss')
+        .src(path.dev.scss)
         .pipe(sourcemaps.init())
         .pipe(sass({ errLogToConsole: true, outputStyle: 'expanded' }).on('error', sass.logError))
         .pipe(sourcemaps.write())
         .pipe(postcss([autoprefixer()]))
-        .pipe(gulp.dest('./dist/css'))
+        .pipe(gulp.dest(path.dist.css))
         .pipe(browserSync.stream());
 });
 
 
 
 gulp.task('compile:es6', function () {
-    return gulp.src('./src/js/**/*.js')
-        .pipe(babel({ presets: ['@babel/env'] }))
+    return gulp.src(path.dev.js)
+        .pipe(babel({ presets: ['env'] }))
         .on('error', function (error) {
             console.log(error.toString());
             this.emit('end')
         })
         .pipe(concat('main.js'))
-        .pipe(gulp.dest('./dist/js'));
+        .pipe(gulp.dest(path.dist.js));
 });
 
 gulp.task('clean', function () {
-    return gulp.src('./dist', { read: false })
+    return gulp.src(path.dist.html, { read: false })
         .pipe(clean());
 });
 
@@ -78,46 +92,46 @@ gulp.task('clean', function () {
 
 gulp.task('minify:html', function () {
     return gulp
-        .src('src/*.html')
+        .src(path.dev.html)
         .pipe(htmlreplace({
             'css': './css/main.css',
             'js': ['./js/vendor.js', './js/main.js']
         }))
         .pipe(htmlmin({ collapseWhitespace: true, collapseInlineTagWhitespace: true, removeComments: true }))
-        .pipe(gulp.dest('./dist'));
+        .pipe(gulp.dest(path.dist.html));
 });
 
 gulp.task('minify:css', function () {
     return gulp
-        .src('src/scss/**/*.scss')
+        .src(path.scss)
         .pipe(sass({ errLogToConsole: true, outputStyle: 'compressed' }).on('error', sass.logError))
         .pipe(postcss([autoprefixer()]))
-        .pipe(gulp.dest('./dist/css'));
+        .pipe(gulp.dest(path.dist.css));
 });
 
 gulp.task('vendor', function () {
     return gulp.src(scripts)
         .pipe(concat('vendor.js'))
-        .pipe(gulp.dest('./dist/js'));
+        .pipe(gulp.dest(path.dist.js));
 });
 
 gulp.task('minify:js', function () {
-    return gulp.src('./src/js/**/*.js')
-        .pipe(babel({ presets: ['@babel/env'] }))
+    return gulp.src(path.dev.js)
+        .pipe(babel({ presets: ['env'] }))
         .pipe(concat('main.js'))
         .pipe(uglify())
-        .pipe(gulp.dest('./dist/js'));
+        .pipe(gulp.dest(path.dist.js));
 });
 
 gulp.task('minify:img', function () {
-    return gulp.src('./src/img/*')
+    return gulp.src(path.dev.img)
         .pipe(imagemin())
-        .pipe(gulp.dest('./dist/img'));
+        .pipe(gulp.dest(path.dist.img));
 });
 
 gulp.task('surge', ['minify:html', 'minify:img', 'minify:css', 'vendor', 'minify:js'], function () {
     return surge({
-        project: './dist',
+        project: path.dist.html,
         domain: 'my-domain.surge.sh'
     })
 });
