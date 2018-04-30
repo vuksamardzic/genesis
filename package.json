@@ -4,7 +4,7 @@
   "description": "My kickstarter for developing websites.",
   "main": "src/index.html",
   "scripts": {
-    "init": "npm i -D autoprefixer babel-core babel-preset-env browser-sync gulp gulp-babel gulp-clean gulp-concat gulp-html-replace gulp-htmlmin gulp-imagemin gulp-postcss gulp-sass gulp-sourcemaps gulp-surge gulp-uglify gulp-watch && npm i -S jquery slick-carousel",
+    "init": "npm i -D autoprefixer babel-core babel-preset-env browser-sync eslint gulp gulp-babel gulp-clean gulp-concat gulp-html-replace gulp-htmlmin gulp-imagemin gulp-postcss gulp-sass gulp-sourcemaps gulp-surge gulp-uglify gulp-watch && npm i -S jquery slick-carousel",
     "dev": "./node_modules/.bin/gulp",
     "deploy": "./node_modules/.bin/gulp deploy"
   },
@@ -24,10 +24,10 @@
   },
   "homepage": "https://github.com/vuksamardzic/genesis#readme",
   "devDependencies": {
-    "autoprefixer": "^8.2.0",
-    "babel-core": "^6.26.0",
+    "autoprefixer": "^8.4.1",
+    "babel-core": "^6.26.3",
     "babel-preset-env": "^1.6.1",
-    "browser-sync": "^2.23.6",
+    "browser-sync": "^2.24.1",
     "eslint": "^4.19.1",
     "gulp": "^3.9.1",
     "gulp-babel": "^7.0.1",
