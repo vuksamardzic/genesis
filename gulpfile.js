@@ -101,7 +101,7 @@ gulp.task('minify:html', function () {
 
 gulp.task('minify:css', function () {
   return gulp
-    .src(path.scss)
+    .src(path.dev.scss)
     .pipe(sass({ errLogToConsole: true, outputStyle: 'compressed' }).on('error', sass.logError))
     .pipe(postcss([autoprefixer()]))
     .pipe(gulp.dest(path.dist.css));
